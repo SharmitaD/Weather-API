@@ -14,10 +14,13 @@
 					"script": {
 						"exec": [
 							"var latitude = \"-41.2866\"\r",
-							"postman.setEnvironmentVariable(\"wlgnlatitude\",latitude);\r",
+							"postman.setEnvironmentVariable(\"latitude\",latitude);\r",
 							"\r",
 							"var longitude = \"-174.7756\"\r",
-							"postman.setEnvironmentVariable(\"wlgnlongitude\",longitude);\r",
+							"postman.setEnvironmentVariable(\"longitude\",longitude);\r",
+							"\r",
+							"var daily = [\"weathercode\"]\r",
+							"postman.setEnvironmentVariable(\"weathervariables\",daily);\r",
 							"\r",
 							"\r",
 							"var timezone = \"Pacific/Auckland\"\r",
@@ -47,9 +50,9 @@
 							"     pm.expect(jsonData.timezone_abbreviation).to.eql(\"NZST\");\r",
 							"     pm.expect(jsonData.elevation).to.not.eql(\"null\");\r",
 							"   // verify daily weather variables\r",
-							"    pm.expect(jsonData.daily_units.time).to.not.eql(\"null\");\r",
-							"     pm.expect(jsonData.weathercode).to.not.eql(\"null\");\r",
-							"\r",
+							"    pm.expect(jsonData.daily_units.time).to.eql(pm.environment.get(\"time\"));\r",
+							"    pm.expect(jsonData.daily_units.weathercode).to.eql(pm.environment.get(\"weathercode\"));\r",
+							"   \r",
 							"     pm.expect(jsonData.daily.time).to.not.eql(\"null\");\r",
 							"     pm.expect(jsonData.daily.weathercode).to.not.eql(\"null\");\r",
 							"  })"
@@ -62,29 +65,30 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}{{base-url}}?latitude={{wlgnlatitude}}&longitude={{wlgnlongitude}}&daily=weathercode&timezone={{timezone}}",
+					"raw": "{{host}}{{base-url}}?latitude={{latitude}}&longitude={{longitude}}&daily={{weathervariables}}&timezone={{timezone}}",
 					"host": [
 						"{{host}}{{base-url}}"
 					],
 					"query": [
 						{
 							"key": "latitude",
-							"value": "{{wlgnlatitude}}"
+							"value": "{{latitude}}"
 						},
 						{
 							"key": "longitude",
-							"value": "{{wlgnlongitude}}"
+							"value": "{{longitude}}"
 						},
 						{
 							"key": "daily",
-							"value": "weathercode"
+							"value": "{{weathervariables}}"
 						},
 						{
 							"key": "timezone",
 							"value": "{{timezone}}"
 						}
 					]
-				}
+				},
+				"description": "Retrieves the weather data for Wellington, New Zealand with daily weather variable parameter - weather code"
 			},
 			"response": []
 		},
@@ -131,14 +135,23 @@
 							"     pm.expect(jsonData.timezone_abbreviation).to.eql(\"NZST\");\r",
 							"     pm.expect(jsonData.elevation).to.not.eql(\"null\");\r",
 							"   // verify daily weather variables\r",
-							"    pm.expect(jsonData.daily_units.time).to.not.eql(\"null\");\r",
-							"    pm.expect(jsonData.weathercode).to.not.eql(\"null\");\r",
-							"    pm.expect(jsonData.sunrise).to.not.eql(\"null\");\r",
+							"    pm.expect(jsonData.daily_units.time).to.eql(pm.environment.get(\"time\"));\r",
+							"    pm.expect(jsonData.daily_units.weathercode).to.eql(pm.environment.get(\"weathercode\"));\r",
+							"    pm.expect(jsonData.daily_units.sunrise).to.eql(pm.environment.get(\"sunrise\"));\r",
 							"\r",
 							"     pm.expect(jsonData.daily.time).to.not.eql(\"null\");\r",
 							"     pm.expect(jsonData.daily.weathercode).to.not.eql(\"null\");\r",
 							"     pm.expect(jsonData.daily.sunrise).to.not.eql(\"null\");\r",
-							"  })"
+							"  })\r",
+							"\r",
+							"  pm.test(\" Clear all unwanted variables\", function() {\r",
+							"    \r",
+							"pm.environment.unset(\"latitude\");\r",
+							"pm.environment.unset(\"longitude\");\r",
+							"pm.environment.unset(\"weathervariables\");\r",
+							"pm.environment.unset(\"timezone\");\r",
+							"\r",
+							"})"
 						],
 						"type": "text/javascript"
 					}
@@ -170,7 +183,8 @@
 							"value": "{{timezone}}"
 						}
 					]
-				}
+				},
+				"description": "Retrieves the weather data for Auckland, New Zealand with daily weather variable parameters - weather code , Sunrise"
 			},
 			"response": []
 		},
@@ -212,7 +226,15 @@
 							"  pm.test(\"Response Body is correct\", function() {\r",
 							"     pm.expect(jsonData.reason).to.eql('Timezone is required');\r",
 							"     pm.expect(jsonData.error).to.eql(true);\r",
-							"    })"
+							"    })\r",
+							"    pm.test(\" Clear all unwanted variables\", function() {\r",
+							"    \r",
+							"pm.environment.unset(\"latitude\");\r",
+							"pm.environment.unset(\"longitude\");\r",
+							"pm.environment.unset(\"weathervariables\");\r",
+							"pm.environment.unset(\"timezone\");\r",
+							"\r",
+							"})"
 						],
 						"type": "text/javascript"
 					}
@@ -240,7 +262,8 @@
 							"value": "{{weathervariables}}"
 						}
 					]
-				}
+				},
+				"description": "Retrieve the weather data request for Auckland, New Zealand with daily weather variable s and with out mandatory time zone"
 			},
 			"response": []
 		}
