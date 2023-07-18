@@ -1,0 +1,248 @@
+{
+	"info": {
+		"_postman_id": "ce8e1b89-0e74-4b0f-8172-275539aeb16e",
+		"name": "Weather API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6755696"
+	},
+	"item": [
+		{
+			"name": "Wellington Weather",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var latitude = \"-41.2866\"\r",
+							"postman.setEnvironmentVariable(\"wlgnlatitude\",latitude);\r",
+							"\r",
+							"var longitude = \"-174.7756\"\r",
+							"postman.setEnvironmentVariable(\"wlgnlongitude\",longitude);\r",
+							"\r",
+							"\r",
+							"var timezone = \"Pacific/Auckland\"\r",
+							"postman.setEnvironmentVariable(\"timezone\",timezone);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Test 1:Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    })\r",
+							"    \r",
+							"  // Tests to verify the response body\r",
+							"\r",
+							" var jsonData = pm.response.json()\r",
+							"  pm.test(\"Response Body is correct\", function() {\r",
+							"      \r",
+							" pm.expect(jsonData.latitude).to.eql(-41.25);\r",
+							"     pm.expect(jsonData.longitude).to.eql(-174.75);\r",
+							"     pm.expect(jsonData.generationtime_ms).to.not.eql(\"null\");\r",
+							"     pm.expect(jsonData.utc_offset_seconds).to.not.eql(\"null\");\r",
+							"     pm.expect(jsonData.timezone).to.eql(pm.environment.get(\"timezone\"));\r",
+							"     pm.expect(jsonData.timezone_abbreviation).to.eql(\"NZST\");\r",
+							"     pm.expect(jsonData.elevation).to.not.eql(\"null\");\r",
+							"   // verify daily weather variables\r",
+							"    pm.expect(jsonData.daily_units.time).to.not.eql(\"null\");\r",
+							"     pm.expect(jsonData.weathercode).to.not.eql(\"null\");\r",
+							"\r",
+							"     pm.expect(jsonData.daily.time).to.not.eql(\"null\");\r",
+							"     pm.expect(jsonData.daily.weathercode).to.not.eql(\"null\");\r",
+							"  })"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}{{base-url}}?latitude={{wlgnlatitude}}&longitude={{wlgnlongitude}}&daily=weathercode&timezone={{timezone}}",
+					"host": [
+						"{{host}}{{base-url}}"
+					],
+					"query": [
+						{
+							"key": "latitude",
+							"value": "{{wlgnlatitude}}"
+						},
+						{
+							"key": "longitude",
+							"value": "{{wlgnlongitude}}"
+						},
+						{
+							"key": "daily",
+							"value": "weathercode"
+						},
+						{
+							"key": "timezone",
+							"value": "{{timezone}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Daily weather variables - Auckland",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var latitude = \"-36.8485\"\r",
+							"postman.setEnvironmentVariable(\"latitude\",latitude);\r",
+							"\r",
+							"var longitude = \"-174.7635\"\r",
+							"postman.setEnvironmentVariable(\"longitude\",longitude);\r",
+							"\r",
+							"var daily = [\"weathercode\",\"sunrise\"]\r",
+							"postman.setEnvironmentVariable(\"weathervariables\",daily);\r",
+							"\r",
+							"var timezone = \"Pacific/Auckland\"\r",
+							"postman.setEnvironmentVariable(\"timezone\",timezone);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Test 1:Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    })\r",
+							"    \r",
+							"  // Tests to verify the response body\r",
+							"\r",
+							" var jsonData = pm.response.json()\r",
+							"  pm.test(\"Response Body is correct\", function() {\r",
+							"      \r",
+							" pm.expect(jsonData.latitude).to.eql(-36.875);\r",
+							"     pm.expect(jsonData.longitude).to.eql(-174.75);\r",
+							"     pm.expect(jsonData.generationtime_ms).to.not.eql(\"null\");\r",
+							"     pm.expect(jsonData.utc_offset_seconds).to.not.eql(\"null\");\r",
+							"     pm.expect(jsonData.timezone).to.eql(pm.environment.get(\"timezone\"));\r",
+							"     pm.expect(jsonData.timezone_abbreviation).to.eql(\"NZST\");\r",
+							"     pm.expect(jsonData.elevation).to.not.eql(\"null\");\r",
+							"   // verify daily weather variables\r",
+							"    pm.expect(jsonData.daily_units.time).to.not.eql(\"null\");\r",
+							"    pm.expect(jsonData.weathercode).to.not.eql(\"null\");\r",
+							"    pm.expect(jsonData.sunrise).to.not.eql(\"null\");\r",
+							"\r",
+							"     pm.expect(jsonData.daily.time).to.not.eql(\"null\");\r",
+							"     pm.expect(jsonData.daily.weathercode).to.not.eql(\"null\");\r",
+							"     pm.expect(jsonData.daily.sunrise).to.not.eql(\"null\");\r",
+							"  })"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}{{base-url}}?latitude={{latitude}}&longitude={{longitude}}&daily={{weathervariables}}&timezone={{timezone}}",
+					"host": [
+						"{{host}}{{base-url}}"
+					],
+					"query": [
+						{
+							"key": "latitude",
+							"value": "{{latitude}}"
+						},
+						{
+							"key": "longitude",
+							"value": "{{longitude}}"
+						},
+						{
+							"key": "daily",
+							"value": "{{weathervariables}}"
+						},
+						{
+							"key": "timezone",
+							"value": "{{timezone}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auckland WeatherW/O timezone - 400 Bad Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var latitude = \"-36.8485\"\r",
+							"postman.setEnvironmentVariable(\"latitude\",latitude);\r",
+							"\r",
+							"var longitude = \"-174.7635\"\r",
+							"postman.setEnvironmentVariable(\"longitude\",longitude);\r",
+							"\r",
+							"var daily = [\"weathercode\",\"sunrise\"]\r",
+							"postman.setEnvironmentVariable(\"weathervariables\",daily);\r",
+							"\r",
+							"var timezone = \"Pacific%2FAuckland\"\r",
+							"postman.setEnvironmentVariable(\"timezone\",timezone);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Test 1:Status code is 400\", function(){\r",
+							"    pm.response.to.have.status(400);\r",
+							"    })\r",
+							"    \r",
+							"  // Tests to verify the response body\r",
+							"\r",
+							" var jsonData = pm.response.json()\r",
+							"  pm.test(\"Response Body is correct\", function() {\r",
+							"     pm.expect(jsonData.reason).to.eql('Timezone is required');\r",
+							"     pm.expect(jsonData.error).to.eql(true);\r",
+							"    })"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}{{base-url}}?latitude={{latitude}}&longitude={{longitude}}&daily={{weathervariables}}",
+					"host": [
+						"{{host}}{{base-url}}"
+					],
+					"query": [
+						{
+							"key": "latitude",
+							"value": "{{latitude}}"
+						},
+						{
+							"key": "longitude",
+							"value": "{{longitude}}"
+						},
+						{
+							"key": "daily",
+							"value": "{{weathervariables}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
